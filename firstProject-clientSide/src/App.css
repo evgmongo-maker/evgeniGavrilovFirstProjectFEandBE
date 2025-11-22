@@ -1,0 +1,217 @@
+/* Main App styles - עיצוב ראשי לאפליקציית נכסים בישראל */
+
+/* RTL Support and Israeli color scheme */
+.app {
+  direction: rtl;
+  text-align: right;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Israeli color palette */
+:root {
+  --primary-blue: #0038a8; /* Israeli blue */
+  --primary-white: #ffffff;
+  --accent-blue: #1e88e5;
+  --success-green: #4caf50;
+  --warning-orange: #ff9800;
+  --danger-red: #f44336;
+  --text-dark: #333333;
+  --text-light: #666666;
+  --border-light: #e0e0e0;
+  --shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Main content area */
+.main-content {
+  padding: clamp(10px, 3vw, 20px);
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 80px);
+}
+
+/* Full content area (without header) */
+.full-content {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Common button styles */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: var(--primary-white);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-blue);
+}
+
+.btn-secondary {
+  background-color: var(--border-light);
+  color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-success {
+  background-color: var(--success-green);
+  color: var(--primary-white);
+}
+
+.btn-danger {
+  background-color: var(--danger-red);
+  color: var(--primary-white);
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  font-size: 16px;
+  direction: rtl;
+  text-align: right;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+}
+
+/* Card styles */
+.card {
+  background: var(--primary-white);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 10px;
+    min-height: calc(100vh - 120px); /* Account for wrapped header */
+  }
+  
+  .card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+  
+  .form-input {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 8px;
+  }
+  
+  .card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .form-input {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  h1 {
+    font-size: clamp(20px, 5vw, 28px);
+  }
+  
+  h2 {
+    font-size: clamp(18px, 4vw, 24px);
+  }
+  
+  h3 {
+    font-size: clamp(16px, 3.5vw, 20px);
+  }
+}
+
+/* Error and success messages */
+.error-message {
+  color: var(--danger-red);
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  border-right: 4px solid var(--danger-red);
+}
+
+.success-message {
+  color: var(--success-green);
+  background-color: #e8f5e8;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  border-right: 4px solid var(--success-green);
+}
+
+/* Loading spinner */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-light);
+  border-top: 4px solid var(--primary-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

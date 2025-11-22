@@ -1,0 +1,253 @@
+/**
+ * Auth Routes - נתיבי אימות משתמשים
+ * 
+ * תפקיד: ניהול הרשמה, התחברות והתנתקות של משתמשים
+ * נתיבים: /api/auth/register, /api/auth/login, /api/auth/logout
+ * 
+ * הערה חשובה: המידע נשמר בזיכרון (לא במסד נתונים)
+ * כשהשרת נכבה, כל המידע נמחק!
+ */
+
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+
+const router = express.Router();
+
+/**
+ * סוד JWT - לצורך הצפנת tokens
+ * בפרודקשן אמיתי צריך להיות במשתנה סביבה
+ */
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-here-change-in-production';
+
+/**
+ * POST /api/auth/register
+ * הרשמה של משתמש חדש
+ * 
+ * Body שדרוש:
+ * {
+ *   "name": "שם המשתמש",
+ *   "email": "user@example.com",
+ *   "password": "סיסמה"
+ * }
+ * 
+ * תהליך:
+ * 1. בדיקת תקינות הנתונים (validation)
+ * 2. בדיקה אם המשתמש כבר קיים
+ * 3. הצפנת הסיסמה
+ * 4. שמירת המשתמש בזיכרון
+ * 5. יצירת token והחזרתו
+ */
+router.post('/register', async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    // Validation - בדיקת תקינות הקלט
+    if (!name || !email || !password) {
+      return res.status(400).json({ 
+        error: 'חסרים שדות חובה',
+        message: 'נא למלא את כל השדות: שם, אימייל וסיסמה' 
+      });
+    }
+
+    // בדיקת פורמט אימייל בסיסי
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        error: 'אימייל לא תקין',
+        message: 'נא להזין כתובת אימייל תקינה' 
+      });
+    }
+
+    // בדיקת אורך סיסמה מינימלי
+    if (password.length < 6) {
+      return res.status(400).json({ 
+        error: 'סיסמה קצרה מדי',
+        message: 'הסיסמה חייבת להכיל לפחות 6 תווים' 
+      });
+    }
+
+    // בדיקה אם המשתמש כבר קיים
+    const existingUser = users.find(u => u.email === email);
+    if (existingUser) {
+      return res.status(409).json({ 
+        error: 'משתמש כבר קיים',
+        message: 'אימייל זה כבר רשום במערכת' 
+      });
+    }
+
+    // הצפנת הסיסמה - bcrypt
+    // הסיסמה לא נשמרת בטקסט גלוי, אלא מוצפנת
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // יצירת אובייקט משתמש חדש
+    const newUser = {
+      id: Date.now().toString(), // ID ייחודי (בפרודקשן אמיתי נשתמש ב-UUID)
+      name,
+      email,
+      password: hashedPassword, // סיסמה מוצפנת!
+      createdAt: new Date().toISOString()
+    };
+
+    // שמירת המשתמש בזיכרון
+    users.push(newUser);
+
+    // יצירת JWT token
+    // ה-token מכיל את מידע המשתמש (ללא סיסמה!)
+    const token = jwt.sign(
+      { 
+        userId: newUser.id, 
+        email: newUser.email,
+        name: newUser.name 
+      },
+      JWT_SECRET,
+      { expiresIn: '24h' } // ה-token תקף ל-24 שעות
+    );
+
+    // החזרת תגובה מוצלחת
+    res.status(201).json({
+      message: 'הרשמה הושלמה בהצלחה',
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email
+      },
+      token
+    });
+
+    console.log(`✅ משתמש חדש נרשם: ${email}`);
+
+  } catch (error) {
+    console.error('שגיאה בהרשמה:', error);
+    res.status(500).json({ 
+      error: 'שגיאת שרת',
+      message: 'אירעה שגיאה בתהליך ההרשמה' 
+    });
+  }
+});
+
+/**
+ * POST /api/auth/login
+ * התחברות של משתמש קיים
+ * 
+ * Body שדרוש:
+ * {
+ *   "email": "user@example.com",
+ *   "password": "סיסמה"
+ * }
+ * 
+ * תהליך:
+ * 1. בדיקת תקינות הנתונים
+ * 2. חיפוש המשתמש לפי אימייל
+ * 3. השוואת הסיסמה (מוצפנת)
+ * 4. יצירת token והחזרתו
+ */
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validation - בדיקת תקינות
+    if (!email || !password) {
+      return res.status(400).json({ 
+        error: 'חסרים שדות חובה',
+        message: 'נא למלא אימייל וסיסמה' 
+      });
+    }
+
+    // חיפוש המשתמש בזיכרון
+    const user = users.find(u => u.email === email);
+    if (!user) {
+      return res.status(401).json({ 
+        error: 'פרטי התחברות שגויים',
+        message: 'אימייל או סיסמה לא נכונים' 
+      });
+    }
+
+    // השוואת הסיסמה
+    // bcrypt.compare משווה את הסיסמה שהוזנה עם הסיסמה המוצפנת
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ 
+        error: 'פרטי התחברות שגויים',
+        message: 'אימייל או סיסמה לא נכונים' 
+      });
+    }
+
+    // יצירת JWT token
+    const token = jwt.sign(
+      { 
+        userId: user.id, 
+        email: user.email,
+        name: user.name 
+      },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    // החזרת תגובה מוצלחת
+    res.status(200).json({
+      message: 'התחברות הצליחה',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      },
+      token
+    });
+
+    console.log(`✅ משתמש התחבר: ${email}`);
+
+  } catch (error) {
+    console.error('שגיאה בהתחברות:', error);
+    res.status(500).json({ 
+      error: 'שגיאת שרת',
+      message: 'אירעה שגיאה בתהליך ההתחברות' 
+    });
+  }
+});
+
+/**
+ * POST /api/auth/logout
+ * התנתקות משתמש
+ * 
+ * הערה: ב-JWT אין באמת "logout" בצד השרת
+ * הלקוח פשוט מוחק את ה-token שלו
+ * הנתיב הזה קיים רק לצורך אחידות ולוגים
+ */
+router.post('/logout', (req, res) => {
+  try {
+    // בפועל, הלקוח מוחק את ה-token מה-localStorage
+    // הנתיב הזה רק מחזיר הודעת הצלחה
+    res.status(200).json({
+      message: 'התנתקת בהצלחה'
+    });
+
+    console.log(`✅ משתמש התנתק`);
+
+  } catch (error) {
+    console.error('שגיאה בהתנתקות:', error);
+    res.status(500).json({ 
+      error: 'שגיאת שרת',
+      message: 'אירעה שגיאה בתהליך ההתנתקות' 
+    });
+  }
+});
+
+/**
+ * GET /api/auth/users (לצורכי debug בלבד!)
+ * מחזיר את כל המשתמשים (ללא סיסמאות)
+ * 
+ * הערה: בפרודקשן אמיתי, צריך להסיר את הנתיב הזה!
+ * זה כאן רק לצורכי בדיקה ופיתוח
+ */
+router.get('/users', (req, res) => {
+  // מחזיר משתמשים ללא סיסמאות
+  const usersWithoutPasswords = users.map(({ password, ...user }) => user);
+  res.json({
+    count: users.length,
+    users: usersWithoutPasswords
+  });
+});
+
+export default router;

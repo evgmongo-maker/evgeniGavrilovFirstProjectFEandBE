@@ -1,0 +1,34 @@
+# Node modules - תיקיית התלויות
+node_modules/
+
+# Environment variables - משתני סביבה רגישים
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs - קבצי לוג
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files - קבצי מערכת הפעלה
+.DS_Store
+Thumbs.db
+
+# IDE files - קבצי עורך קוד
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build files - קבצי בנייה
+dist/
+build/
+
+# Playwright test results - תוצאות בדיקות
+playwright-report/
+test-results/

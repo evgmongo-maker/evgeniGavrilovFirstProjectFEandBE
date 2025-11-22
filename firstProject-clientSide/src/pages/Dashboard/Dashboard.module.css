@@ -1,0 +1,359 @@
+/* Dashboard page styles - עיצוב דף ניהול נכסים */
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+/* Header section */
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: clamp(14px, 3vw, 18px);
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addBtn {
+  background-color: var(--success-green);
+  color: var(--primary-white);
+}
+
+.addBtn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.calculatorBtn {
+  background-color: var(--accent-blue);
+  color: var(--primary-white);
+}
+
+.calculatorBtn:hover {
+  background-color: #1565c0;
+  transform: translateY(-2px);
+}
+
+/* Calculator section */
+.calculatorSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+/* Form overlay */
+.formOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.formContainer {
+  background: var(--primary-white);
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.formTitle {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--text-dark);
+  margin-bottom: 25px;
+}
+
+/* Form styles */
+.form {
+  margin-bottom: 0;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.input, .select, .textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 16px;
+  direction: rtl;
+  text-align: right;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.input::placeholder, .textarea::placeholder {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* Form actions */
+.formActions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.saveBtn {
+  background-color: var(--primary-blue);
+  color: var(--primary-white);
+}
+
+.saveBtn:hover {
+  background-color: var(--accent-blue);
+}
+
+.cancelBtn {
+  background-color: var(--border-light);
+  color: var(--text-dark);
+}
+
+.cancelBtn:hover {
+  background-color: #d0d0d0;
+}
+
+/* Error message */
+.errorMessage {
+  background-color: #ffebee;
+  color: var(--danger-red);
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-right: 4px solid var(--danger-red);
+  text-align: right;
+}
+
+/* Properties section */
+.propertiesSection {
+  margin-top: 40px;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.propertiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--primary-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.emptyIcon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.emptyTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.emptyText {
+  font-size: 16px;
+  color: var(--text-light);
+  margin-bottom: 25px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 15px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+  }
+  
+  .actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn {
+    width: 250px;
+    text-align: center;
+  }
+  
+  .formContainer {
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  .formTitle {
+    font-size: 20px;
+  }
+  
+  .formActions {
+    flex-direction: column;
+  }
+  
+  .formActions .btn {
+    width: 100%;
+  }
+  
+  .propertiesGrid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .emptyState {
+    padding: 40px 15px;
+  }
+  
+  .emptyIcon {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 10px;
+  }
+  
+  .header {
+    margin-bottom: 30px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+  }
+  
+  .formOverlay {
+    padding: 10px;
+  }
+  
+  .formContainer {
+    padding: 15px;
+  }
+  
+  .input, .select, .textarea {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+/* Additional responsive breakpoints */
+@media (max-width: 1024px) {
+  .dashboard {
+    padding: 12px;
+  }
+  
+  .propertiesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  
+  .actions {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 540px) {
+  .dashboard {
+    padding: 10px;
+  }
+  
+  .propertiesGrid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header {
+    margin-bottom: 20px;
+  }
+}

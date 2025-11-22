@@ -1,0 +1,335 @@
+/* Loan Calculator styles - עיצוב מחשבון הלוואה */
+
+/* Page container - centralized layout */
+.pageContainer {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  direction: rtl;
+}
+
+/* Header section */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  max-width: 800px;
+}
+
+.pageTitle {
+  font-size: clamp(28px, 4vw, 36px);
+  color: var(--primary-blue);
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.description {
+  font-size: 18px;
+  color: var(--text-dark);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* Main calculator container */
+.calculator {
+  background: var(--primary-white);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+/* Instructions section */
+.instructions {
+  background: #f0f7ff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-right: 4px solid var(--primary-blue);
+}
+
+.instructionsTitle {
+  color: var(--primary-blue);
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.instructionsList {
+  margin: 0;
+  padding-right: 20px;
+  list-style-type: none;
+  counter-reset: step-counter;
+}
+
+.instructionsList li {
+  counter-increment: step-counter;
+  margin-bottom: 10px;
+  position: relative;
+  padding-right: 30px;
+  line-height: 1.5;
+}
+
+.instructionsList li::before {
+  content: counter(step-counter);
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: var(--primary-blue);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.title {
+  color: var(--primary-blue);
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Form styles */
+.form {
+  margin-bottom: 20px;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 16px;
+  direction: rtl;
+  text-align: right;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
+}
+
+.input::placeholder {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.calculateBtn {
+  background-color: var(--primary-blue);
+  color: var(--primary-white);
+}
+
+.calculateBtn:hover {
+  background-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.resetBtn {
+  background-color: var(--border-light);
+  color: var(--text-dark);
+}
+
+.resetBtn:hover {
+  background-color: #d0d0d0;
+}
+
+/* Results section */
+.results {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 25px;
+  border-right: 4px solid var(--primary-blue);
+}
+
+.resultsTitle {
+  color: var(--primary-blue);
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.resultItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.resultItem:last-child {
+  border-bottom: none;
+}
+
+.resultLabel {
+  font-weight: bold;
+  color: var(--text-dark);
+  font-size: 16px;
+}
+
+.resultValue {
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--success-green);
+}
+
+.interest {
+  color: var(--warning-orange);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .calculator {
+    padding: 20px 15px;
+    margin: 15px 0;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+  
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .button {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .resultItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .resultValue {
+    font-size: 16px;
+  }
+}
+
+/* Footer section with tips */
+.footer {
+  width: 100%;
+  max-width: 600px;
+}
+
+.tips {
+  background: var(--primary-white);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-top: 4px solid var(--accent-blue);
+}
+
+.tipsTitle {
+  color: var(--accent-blue);
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tipsList {
+  margin: 0;
+  padding-right: 20px;
+  list-style-type: none;
+}
+
+.tipsList li {
+  margin-bottom: 12px;
+  position: relative;
+  padding-right: 25px;
+  line-height: 1.6;
+  color: var(--text-dark);
+}
+
+.tipsList li::before {
+  content: "💡";
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 20px 10px;
+  }
+  
+  .header {
+    margin-bottom: 30px;
+  }
+  
+  .pageTitle {
+    font-size: 24px;
+  }
+  
+  .description {
+    font-size: 16px;
+  }
+  
+  .calculator {
+    padding: 20px 15px;
+    margin-bottom: 20px;
+  }
+  
+  .instructions {
+    padding: 15px;
+  }
+  
+  .instructionsList li {
+    padding-right: 25px;
+  }
+  
+  .tips {
+    padding: 20px;
+  }
+}

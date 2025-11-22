@@ -1,0 +1,200 @@
+/* PropertyForm styles - עיצוב טופס הוספה/עריכה של נכס */
+
+.propertyForm {
+  direction: rtl;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Success message */
+.successMessage {
+  background: #d4edda;
+  color: #155724;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6cb;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Form styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.input,
+.textarea,
+.select {
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  direction: rtl;
+  text-align: right;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.select {
+  cursor: pointer;
+}
+
+/* Error states */
+.input.error,
+.textarea.error {
+  border-color: #dc3545;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+/* General error message */
+.errorMessage:not(span) {
+  background-color: #ffebee;
+  color: #dc3545;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border-right: 4px solid #dc3545;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.submitBtn,
+.cancelBtn {
+  padding: 14px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-width: 150px;
+}
+
+.submitBtn {
+  background: #4a90e2;
+  color: white;
+}
+
+.submitBtn:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+}
+
+.cancelBtn {
+  background: transparent;
+  color: #666;
+  border: 2px solid #e1e5e9;
+}
+
+.cancelBtn:hover {
+  border-color: #666;
+  background: #f8f9fa;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    margin: 0 10px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .submitBtn,
+  .cancelBtn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .propertyForm {
+    padding: 20px 10px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+  
+  .input,
+  .textarea,
+  .select {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+}

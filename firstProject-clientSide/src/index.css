@@ -1,0 +1,170 @@
+/* Global styles for נכסים בישראל - עיצוב גלובלי */
+
+/* Font support for Hebrew */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Hebrew-friendly font stack */
+  font-family: 'Assistant', 'Segoe UI', Tahoma, Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Light color scheme for better readability */
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  color: #333333;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Remove default body flexbox */
+#root {
+  min-height: 100vh;
+}
+
+/* Links */
+a {
+  color: #0038a8;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #1e88e5;
+  text-decoration: underline;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #333333;
+  margin: 0;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2em;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+/* Paragraphs */
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Buttons base reset */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Input base styles */
+input, textarea, select {
+  font-family: inherit;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Remove number input arrows for better RTL support */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #1e88e5;
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background-color: #1e88e5;
+  color: white;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+  
+  h1 {
+    font-size: 2em;
+  }
+  
+  h2 {
+    font-size: 1.5em;
+  }
+  
+  h3 {
+    font-size: 1.25em;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    color: black;
+    background: white;
+  }
+  
+  a {
+    color: black;
+    text-decoration: underline;
+  }
+}
