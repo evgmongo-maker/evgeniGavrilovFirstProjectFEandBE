@@ -1,0 +1,47 @@
+{
+  // פתיחת לינקים בדפדפן החיצוני במקום בתוך Cursor
+  "workbench.editor.enablePreview": false,
+  
+  // פתיחת לינקים בדפדפן החיצוני
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  
+  // הגדרות Markdown - פתיחת לינקים בדפדפן החיצוני
+  "markdown.preview.openMarkdownLinks": "inExternalBrowser",
+  
+  // הגדרות עבור לינקים בקוד - פתיחה בדפדפן החיצוני
+  "editor.links": true,
+  
+  // פתיחת לינקים בדפדפן החיצוני (לא בתוך Cursor)
+  "workbench.editor.customLabels.enabled": true,
+  
+  // הגדרות Browser Preview - כיבוי preview פנימי
+  "browser-preview.chromeExecutable": "",
+  "browser-preview.startUrl": "",
+  
+  // הגדרות Simple Browser - פתיחה בדפדפן החיצוני
+  "simpleBrowser.focusLockIndicator.enabled": false,
+  
+  // הגדרות Terminal - פתיחת לינקים בדפדפן החיצוני (חשוב!)
+  "terminal.integrated.allowWorkspaceConfiguration": true,
+  "terminal.integrated.enablePersistentSessions": false,
+  
+  // הגדרות עבור HTTP לינקים - פתיחה בדפדפן החיצוני
+  "http.systemCertificates": true,
+  
+  // הגדרה חשובה: פתיחת לינקים בטרמינל בדפדפן החיצוני
+  "terminal.integrated.localEchoEnabled": "off",
+  
+  // כיבוי Simple Browser - כפוי פתיחה בדפדפן החיצוני
+  "workbench.editorAssociations": {
+    "*.html": "default",
+    "http://*": "default",
+    "https://*": "default"
+  },
+  
+  // הגדרות נוספות לפתיחה בדפדפן החיצוני
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "workbench.editor.enablePreviewFromCodeNavigation": false,
+  
+  // הגדרה חשובה ביותר: פתיחת כל הלינקים בדפדפן החיצוני
+  "workbench.external.openLinks": true
+}

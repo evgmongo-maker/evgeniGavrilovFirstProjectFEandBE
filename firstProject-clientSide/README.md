@@ -1,143 +1,51 @@
-# 🏠 נכסים בישראל - Real Estate Management System
+# First Project - Client Side
 
-מערכת ניהול נכסי נדל"ן בישראל עם תמיכה מלאה בעברית ו-RTL
+React + Vite frontend application.
 
-**👨‍💻 פותח על ידי: evgmongo-maker**
+## 🚀 Quick Start
 
-## תיאור הפרויקט
+### Prerequisites
+- Node.js 20+
+- pnpm 8+
 
-אפליקציית ווב בסיסית לניהול נכסי נדל"ן בישראל. המערכת מאפשרת למשתמשים לנהל את הנכסים שלהם, לחשב הלוואות ולעקוב אחר סטטוס הנכסים.
+### Installation
 
-## טכנולוגיות
+1. **Install pnpm** (if not already installed):
+```bash
+npm install -g pnpm
+```
 
-- **Frontend**: React 19 + Vite
-- **State Management**: Redux Toolkit
-- **Routing**: React Router DOM
-- **Styling**: CSS Modules עם תמיכה ב-RTL
-- **Fonts**: Google Fonts (Assistant) לתמיכה בעברית
+2. **Install dependencies**:
+```bash
+pnpm install
+```
 
-## פיצ'רים
+3. **Run development server**:
+```bash
+pnpm run dev
+```
 
-### ✨ פונקציונליות עיקרית
-- 🏠 **ניהול נכסים**: הוספה, עריכה ומחיקה של נכסים
-- 💰 **מחשבון הלוואה**: חישוב תשלומים חודשיים והערכת עלויות
-- 📊 **מעקב סטטוס**: עקוב אחר סטטוס הנכסים (זמין/נמכר)
-- 👤 **מערכת משתמשים**: הרשמה והתחברות (דמה)
-- 🌐 **תמיכה מלאה בעברית**: RTL ועיצוב מותאם לעברית
+The app will be available at `http://localhost:5173`
 
-### 🎨 עיצוב
-- תמיכה מלאה ב-RTL (כיוון כתיבה מימין לשמאל)
-- צבעי עיצוב ישראליים (כחול לבן)
-- responsive design לכל גדלי מסך
-- נגישות מותאמת
+## 📜 Available Scripts
 
-## מבנה הפרויקט
+- `pnpm run dev` - Start development server
+- `pnpm run build` - Build for production
+- `pnpm run lint` - Run ESLint
+- `pnpm run preview` - Preview production build
+
+## 📁 Project Structure
 
 ```
 src/
-├── components/          # רכיבים עיקריים
-│   ├── Header/         # כותרת עליונה עם ניווט
-│   ├── PropertyCard/   # כרטיס נכס
-│   └── LoanCalculator/ # מחשבון הלוואה
-├── pages/              # דפי האפליקציה
-│   ├── Home/          # דף הבית
-│   ├── Login/         # דף התחברות
-│   ├── Register/      # דף הרשמה
-│   └── Dashboard/     # דף ניהול נכסים
-├── store/             # Redux store
-│   ├── index.js       # הגדרת Store
-│   ├── authSlice.js   # ניהול מצב משתמש
-│   └── propertySlice.js # ניהול נכסים
-├── App.jsx            # רכיב ראשי
-└── main.jsx           # נקודת כניסה
+├── components/     # React components
+├── pages/          # Page components
+├── store/          # Redux store
+├── utils/          # Utility functions
+└── App.jsx         # Main app component
 ```
 
-## התקנה והרצה
+## 🔗 Related
 
-### דרישות מקדימות
-- Node.js 18+ 
-- npm או yarn
-
-### הוראות התקנה
-
-1. **שכפול הפרויקט**
-   ```bash
-   git clone [repository-url]
-   cd firstproject
-   ```
-
-2. **התקנת dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **הרצה במצב פיתוח**
-   ```bash
-   npm run dev
-   ```
-   האפליקציה תהיה זמינה ב: `http://localhost:5173`
-
-4. **בניית הפרויקט לפרודקשן**
-   ```bash
-   npm run build
-   ```
-
-5. **הרצת בדיקות קוד**
-   ```bash
-   npm run lint
-   ```
-
-## שימוש באפליקציה
-
-### 🏠 דף הבית
-- מידע כללי על האפליקציה
-- מחשבון הלוואה פומבי
-- קישורים להרשמה והתחברות
-
-### 👤 הרשמה והתחברות
-- הרשמה עם שם, אימייל וסיסמה
-- התחברות עם אימייל וסיסמה
-- **הערה**: כרגע מדובר בהדמיה - המידע נשמר רק בזיכרון
-
-### 🏢 דף ניהול הנכסים
-- צפייה ברשימת הנכסים
-- הוספת נכס חדש
-- עריכת נכס קיים
-- מחיקת נכס
-- שינוי סטטוס נכס (זמין/נמכר)
-- מחשבון הלוואה
-
-### 💡 מחשבון הלוואה
-- הכנסת סכום הלוואה, ריבית שנתית ותקופה
-- חישוב תשלום חודשי אוטומטי
-- הצגת סך התשלומים וסך הריבית
-
-## פיתוח נוסף
-
-המערכת מוכנה להרחבה עתידית:
-- חיבור לשרת Node.js עם Express
-- בסיס נתונים (MongoDB)
-- העלאת תמונות לנכסים
-- חיפוש ופילטרים מתקדמים
-- אינטגרציה עם מפות Google Maps
-- מערכת התראות
-
-## תרומה לפרויקט
-
-הפרויקט פתוח לתרומות! אנא:
-1. צור Fork של הפרויקט
-2. צור branch חדש לפיצ'ר
-3. בצע commit לשינויים
-4. פתח Pull Request
-
-## רישיון
-
-MIT License - ראה קובץ LICENSE לפרטים
-
-## יצירת קשר
-
-לשאלות ובעיות, אנא פתח Issue בגיטהאב או צור קשר עם המפתחים.
-
----
-
-**פותח במיוחד לשוק הישראלי עם תמיכה מלאה בעברית** 🇮🇱
+- [Server Side](../firstProject-serverSide/README.md)
+- [Connection Guide](CLIENT_SERVER_CONNECTION.md)

@@ -36,12 +36,22 @@ firstProject-serverSide/
 ## התקנה והרצה
 
 ### דרישות מקדימות
-- Node.js 18+
-- npm או yarn
+- Node.js 20+
+- pnpm 8+ (מומלץ) או npm
 
 ### הוראות התקנה
 
-1. **התקנת dependencies**
+1. **התקנת pnpm** (אם עדיין לא מותקן)
+   ```bash
+   npm install -g pnpm
+   ```
+
+2. **התקנת dependencies**
+   ```bash
+   pnpm install
+   ```
+   
+   או עם npm:
    ```bash
    npm install
    ```
@@ -52,11 +62,15 @@ firstProject-serverSide/
 
 3. **הרצת השרת**
    ```bash
-   # הרצה רגילה
-   npm start
-
-   # הרצה עם nodemon (מתאים לפיתוח)
+   # הרצה עם nodemon (מתאים לפיתוח) - מומלץ
+   pnpm run dev
+   
+   # או עם npm:
    npm run dev
+   
+   # הרצה רגילה (ללא nodemon)
+   pnpm start
+   # או: npm start
    ```
 
 4. **השרת רץ על**

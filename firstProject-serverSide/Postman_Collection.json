@@ -1,8 +1,8 @@
 {
 	"info": {
 		"_postman_id": "firstproject-api-collection",
-		"name": "נכסים בישראל - API Collection",
-		"description": "אוסף מלא של כל ה-API endpoints לבדיקה ב-Postman",
+		"name": "נכסים בישראל - API Collection עם בדיקות מלאות",
+		"description": "אוסף מלא של כל ה-API endpoints עם בדיקות JSON מקיפות",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -16,10 +16,54 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"// בדיקת קוד סטטוס",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// בדיקת זמן תגובה",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"// בדיקת מבנה התגובה",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"});",
+									"",
+									"// בדיקת מבנה משתמש",
+									"pm.test(\"User object has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user).to.have.property('id');",
+									"    pm.expect(jsonData.user).to.have.property('name');",
+									"    pm.expect(jsonData.user).to.have.property('email');",
+									"});",
+									"",
+									"// בדיקת סוגי נתונים",
+									"pm.test(\"Data types are correct\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"    pm.expect(jsonData.token).to.be.a('string');",
+									"    pm.expect(jsonData.user.id).to.be.a('string');",
+									"    pm.expect(jsonData.user.name).to.be.a('string');",
+									"    pm.expect(jsonData.user.email).to.be.a('string');",
+									"});",
+									"",
+									"// בדיקת שהטוקן לא ריק",
+									"pm.test(\"Token is not empty\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.empty;",
+									"});",
+									"",
+									"// שמירת משתנים לסביבה",
 									"if (pm.response.code === 201) {",
 									"    const jsonData = pm.response.json();",
 									"    pm.environment.set(\"token\", jsonData.token);",
 									"    pm.environment.set(\"user_id\", jsonData.user.id);",
+									"    pm.environment.set(\"user_email\", jsonData.user.email);",
 									"}"
 								],
 								"type": "text/javascript"
@@ -46,16 +90,134 @@
 					}
 				},
 				{
+					"name": "הרשמה - שגיאת אימייל קיים",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409 (Conflict)\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Error message indicates duplicate email\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include('קיים');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"יוסי כהן\",\n  \"email\": \"yossi@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "הרשמה - שדות חסרים",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 (Bad Request)\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has error structure\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"יוסי כהן\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
 					"name": "התחברות - Login",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"// בדיקת קוד סטטוס",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// בדיקת זמן תגובה",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"// בדיקת מבנה התגובה",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"});",
+									"",
+									"// בדיקת מבנה משתמש",
+									"pm.test(\"User object has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user).to.have.property('id');",
+									"    pm.expect(jsonData.user).to.have.property('name');",
+									"    pm.expect(jsonData.user).to.have.property('email');",
+									"});",
+									"",
+									"// בדיקת שהטוקן לא ריק",
+									"pm.test(\"Token is not empty\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.empty;",
+									"});",
+									"",
+									"// שמירת משתנים לסביבה",
 									"if (pm.response.code === 200) {",
 									"    const jsonData = pm.response.json();",
 									"    pm.environment.set(\"token\", jsonData.token);",
 									"    pm.environment.set(\"user_id\", jsonData.user.id);",
+									"    pm.environment.set(\"user_email\", jsonData.user.email);",
 									"}"
 								],
 								"type": "text/javascript"
@@ -82,7 +244,64 @@
 					}
 				},
 				{
+					"name": "התחברות - סיסמה שגויה",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 (Unauthorized)\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"yossi@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
 					"name": "התנתקות - Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -90,6 +309,47 @@
 							"raw": "{{base_url}}/api/auth/logout",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auth", "logout"]
+						}
+					}
+				},
+				{
+					"name": "רשימת משתמשים - List Users (Debug)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has count and users\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('count');",
+									"    pm.expect(jsonData).to.have.property('users');",
+									"});",
+									"",
+									"pm.test(\"Users is an array\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.users).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Count matches users array length\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.count).to.equal(jsonData.users.length);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "users"]
 						}
 					}
 				}
@@ -100,6 +360,57 @@
 			"item": [
 				{
 					"name": "קבלת כל הנכסים - Get All Properties",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has count and properties\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('count');",
+									"    pm.expect(jsonData).to.have.property('properties');",
+									"});",
+									"",
+									"pm.test(\"Properties is an array\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.properties).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Count matches properties array length\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.count).to.equal(jsonData.properties.length);",
+									"});",
+									"",
+									"// אם יש נכסים, בדוק את המבנה שלהם",
+									"if (pm.response.json().properties.length > 0) {",
+									"    pm.test(\"Property has required fields\", function () {",
+									"        const property = pm.response.json().properties[0];",
+									"        pm.expect(property).to.have.property('id');",
+									"        pm.expect(property).to.have.property('title');",
+									"        pm.expect(property).to.have.property('price');",
+									"        pm.expect(property).to.have.property('location');",
+									"        pm.expect(property).to.have.property('status');",
+									"        pm.expect(property).to.have.property('userId');",
+									"    });",
+									"    ",
+									"    pm.test(\"Property data types are correct\", function () {",
+									"        const property = pm.response.json().properties[0];",
+									"        pm.expect(property.id).to.be.a('string');",
+									"        pm.expect(property.title).to.be.a('string');",
+									"        pm.expect(property.price).to.be.a('number');",
+									"        pm.expect(property.location).to.be.a('string');",
+									"        pm.expect(property.status).to.be.a('string');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -121,12 +432,87 @@
 					}
 				},
 				{
+					"name": "קבלת נכסים - ללא אימות (שגיאה)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 (Unauthorized)\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/properties",
+							"host": ["{{base_url}}"],
+							"path": ["api", "properties"]
+						}
+					}
+				},
+				{
 					"name": "הוספת נכס חדש - Create Property",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has message and property\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('property');",
+									"});",
+									"",
+									"pm.test(\"Property has all required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const property = jsonData.property;",
+									"    pm.expect(property).to.have.property('id');",
+									"    pm.expect(property).to.have.property('title');",
+									"    pm.expect(property).to.have.property('price');",
+									"    pm.expect(property).to.have.property('location');",
+									"    pm.expect(property).to.have.property('status');",
+									"    pm.expect(property).to.have.property('userId');",
+									"    pm.expect(property).to.have.property('createdAt');",
+									"    pm.expect(property).to.have.property('updatedAt');",
+									"});",
+									"",
+									"pm.test(\"Property data types are correct\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const property = jsonData.property;",
+									"    pm.expect(property.id).to.be.a('string');",
+									"    pm.expect(property.title).to.be.a('string');",
+									"    pm.expect(property.price).to.be.a('number');",
+									"    pm.expect(property.location).to.be.a('string');",
+									"    pm.expect(property.status).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Price is positive\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.property.price).to.be.above(0);",
+									"});",
+									"",
+									"pm.test(\"Status is valid\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const validStatuses = ['זמין', 'נמכר'];",
+									"    pm.expect(validStatuses).to.include(jsonData.property.status);",
+									"});",
+									"",
+									"// שמירת מזהה הנכס",
 									"if (pm.response.code === 201) {",
 									"    const jsonData = pm.response.json();",
 									"    pm.environment.set(\"property_id\", jsonData.property.id);",
@@ -166,7 +552,144 @@
 					}
 				},
 				{
+					"name": "הוספת נכס - שדות חסרים",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 (Bad Request)\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"דירת 3 חדרים\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/properties",
+							"host": ["{{base_url}}"],
+							"path": ["api", "properties"]
+						}
+					}
+				},
+				{
+					"name": "הוספת נכס - מחיר לא תקין",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 (Bad Request)\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Error mentions invalid price\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include('מחיר');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"דירת 3 חדרים\",\n  \"price\": -1000,\n  \"location\": \"ירושלים\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/properties",
+							"host": ["{{base_url}}"],
+							"path": ["api", "properties"]
+						}
+					}
+				},
+				{
 					"name": "עדכון נכס - Update Property",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has message and property\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('property');",
+									"});",
+									"",
+									"pm.test(\"Updated property has correct fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const property = jsonData.property;",
+									"    pm.expect(property).to.have.property('id');",
+									"    pm.expect(property).to.have.property('title');",
+									"    pm.expect(property).to.have.property('price');",
+									"});",
+									"",
+									"pm.test(\"Property was actually updated\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    if (requestBody.title) {",
+									"        pm.expect(jsonData.property.title).to.equal(requestBody.title);",
+									"    }",
+									"    if (requestBody.price) {",
+									"        pm.expect(jsonData.property.price).to.equal(requestBody.price);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -203,7 +726,86 @@
 					}
 				},
 				{
+					"name": "עדכון נכס - נכס לא נמצא",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 (Not Found)\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"נכס לא קיים\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/properties/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "properties", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "507f1f77bcf86cd799439011"
+								}
+							]
+						}
+					}
+				},
+				{
 					"name": "מחיקת נכס - Delete Property",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has message and property\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('property');",
+									"});",
+									"",
+									"pm.test(\"Deleted property has id\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.property).to.have.property('id');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -229,6 +831,377 @@
 							]
 						}
 					}
+				},
+				{
+					"name": "מחיקת נכס - נכס לא נמצא",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 (Not Found)\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/properties/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "properties", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "507f1f77bcf86cd799439011"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "קבלת פרטי משתמש - Get Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has user object\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"});",
+									"",
+									"pm.test(\"User has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user).to.have.property('_id');",
+									"    pm.expect(jsonData.user).to.have.property('name');",
+									"    pm.expect(jsonData.user).to.have.property('email');",
+									"});",
+									"",
+									"pm.test(\"User does not have password field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user).to.not.have.property('password');",
+									"});",
+									"",
+									"pm.test(\"User ID matches environment\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const userId = pm.environment.get('user_id');",
+									"    if (userId) {",
+									"        pm.expect(jsonData.user._id.toString()).to.equal(userId);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				},
+				{
+					"name": "קבלת פרטי משתמש - ללא אימות",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 (Unauthorized)\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				},
+				{
+					"name": "עדכון פרטי משתמש - Update Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has message and user\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"});",
+									"",
+									"pm.test(\"User was updated\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    if (requestBody.name) {",
+									"        pm.expect(jsonData.user.name).to.equal(requestBody.name);",
+									"    }",
+									"    if (requestBody.email) {",
+									"        pm.expect(jsonData.user.email).to.equal(requestBody.email.toLowerCase());",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"User does not have password field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user).to.not.have.property('password');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"יוסי כהן מעודכן\",\n  \"email\": \"yossi.updated@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				},
+				{
+					"name": "עדכון משתמש - אימייל קיים",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409 (Conflict)\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Response has error about email\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"yossi@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				},
+				{
+					"name": "מחיקת משתמש - Delete Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has message and user\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"});",
+									"",
+									"pm.test(\"Deleted user does not have password\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user).to.not.have.property('password');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Root & Health",
+			"item": [
+				{
+					"name": "Root Endpoint - בדיקת שרת",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has message and endpoints\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData).to.have.property('endpoints');",
+									"});",
+									"",
+									"pm.test(\"Endpoints object has all route groups\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.endpoints).to.have.property('auth');",
+									"    pm.expect(jsonData.endpoints).to.have.property('properties');",
+									"    pm.expect(jsonData.endpoints).to.have.property('users');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
+						}
+					}
+				},
+				{
+					"name": "404 - נתיב לא קיים",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 (Not Found)\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/nonexistent",
+							"host": ["{{base_url}}"],
+							"path": ["api", "nonexistent"]
+						}
+					}
 				}
 			]
 		}
@@ -247,9 +1220,12 @@
 			"value": ""
 		},
 		{
+			"key": "user_email",
+			"value": ""
+		},
+		{
 			"key": "property_id",
 			"value": ""
 		}
 	]
 }
-
